@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 过滤掉 TRACE 和 DEBUG 级别的日志-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %C{36}.%M:%L - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="logFile"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/pic.log</file>
+        <!-- 过滤掉 TRACE 和 DEBUG 级别的日志-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/pic.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!--保留历史天数-->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %C{36}.%M:%L - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- 仅记录fatal日志 -->
+    <appender name="fatalLogFile"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/pic.FATAL</file>
+
+        <!-- 仅过滤ERROR级别日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/pic.FATAL.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 保留 30天数据，默认无限 -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %C{36}.%M:%L - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 调试日志 -->
+    <appender name="debugLogFile"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/pic.DEBUG</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/pic.DEBUG.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5marker %logger{36}[%L] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="fatalLogFile"/>
+        <appender-ref ref="logFile"/>
+    </root>
+</included>

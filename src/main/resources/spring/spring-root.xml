@@ -18,6 +18,23 @@
             http://www.springframework.org/schema/mvc/spring-mvc.xsd
             http://www.springframework.org/schema/context
             http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:component-scan base-package="todo" use-default-filters="true">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_FALLBACK"/>
+        <property name="ignoreResourceNotFound" value="false" />
+        <property name="locations">
+            <list>
+                <value>classpath:${profile}/config.properties</value>
+            </list>
+        </property>
+        <!-- 可注入中文 -->
+        <property name="fileEncoding" value="UTF-8"/>
+    </bean>
+
+    <import resource="classpath:todo"/>
 
 
 </beans>

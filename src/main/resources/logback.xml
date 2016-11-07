@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- packagingData能够在抛出异常栈的时候把调用代码所在的jar包打出来 -->
+<!-- scan能够热加载logback.xml中的相关修改而不用重启服务 -->
+<configuration scan="true" scanPeriod="30 seconds" packagingData="true">
+    <!-- logback 内部状态监听器 能够将内部相关信息打印纸console中 -->
+    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+    <contextName>wolong-web</contextName>
+
+    <if condition='isDefined("catalina.home")'>
+        <then>
+            <property name="LOG_HOME" value="${catalina.home}/logs"/>
+        </then>
+        <else>
+            <property name="LOG_HOME" value="../logs"/>
+        </else>
+    </if>
+    <if condition='!isDefined("profile") || property("profile").equals("dev")'>
+        <then>
+            <include resource="dev/logback-default.xml"/>
+        </then>
+        <else>
+            <include resource="${profile}/logback-default.xml"/>
+        </else>
+    </if>
+
+    <!-- jvm关闭时优雅的关闭logback释放系统资源 -->
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+</configuration>
